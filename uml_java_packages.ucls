@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <package id="1" language="java" name="main.java.main" project="licenta_vsl_lsb_steganography6" 
+    file="/licenta_vsl_lsb_steganography6/src/main/java/main" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="192" y="74"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="main.java.utils" project="licenta_vsl_lsb_steganography6" 
+    file="/licenta_vsl_lsb_steganography6/src/main/java/utils" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="192" y="244"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="main.java.gui" project="licenta_vsl_lsb_steganography6" 
+    file="/licenta_vsl_lsb_steganography6/src/main/java/gui" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="192" y="156"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="main.java.actions" project="licenta_vsl_lsb_steganography6" 
+    file="/licenta_vsl_lsb_steganography6/src/main/java/actions" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="339" y="155"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="main.java.lsb" project="licenta_vsl_lsb_steganography6" 
+    file="/licenta_vsl_lsb_steganography6/src/main/java/lsb" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="340" y="243"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <dependency id="6">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="7">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

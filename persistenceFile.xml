@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<stegotool>
+	<coverimage id="1">
+		<imagepath>/home/teodora/imagini/serenity.png</imagepath>
+	</coverimage>
+	<secretimage id="2">
+		<imagepath>/home/teodora/imagini/opal.png</imagepath>
+	</secretimage>
+	<stegoimage id="3">
+		<imagepath>/home/teodora/imagini/serenity_opal_stegoimage.png</imagepath>
+	</stegoimage>
+	<sourceimage id="4">
+		<imagepath>/home/teodora/imagini/serenity_opal_stegoimage.png</imagepath>
+	</sourceimage>
+	<hiddenimage id="5">
+		<imagepath>/home/teodora/imagini/serenity_opal_hiddenimage.png</imagepath>
+	</hiddenimage>
+</stegotool>

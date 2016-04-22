@@ -18,6 +18,12 @@ import javax.swing.ScrollPaneConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
 import main.java.actions.DecodeAction;
 import main.java.actions.EncodeAction;
 import main.java.actions.SelectImageAction;
@@ -25,37 +31,41 @@ import main.java.utils.Utils;
 
 /**
  * MainPanel class.
- * 
+ *
  * @author Teodora C.
  */
 public class MainPanel extends JPanel {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private static final Log log = LogFactory.getLog(MainPanel.class);
-    
+
     private final JFrame frame;
-    
+
     private GenericPanel coverPanel;
     private GenericPanel secretPanel;
     private GenericPanel stegoPanel;
     private GenericPanel sourcePanel;
     private GenericPanel hiddenPanel;
-    
+
     private BufferedImage coverImage;
     private BufferedImage secretImage;
     private BufferedImage stegoImage;
     private BufferedImage sourceImage;
     private BufferedImage hiddenImage;
-    
+
     private SelectImageAction selectImageAction;
     private EncodeAction encodeAction;
     private DecodeAction decodeAction;
-    
+
     private GenericImagePanel currentImagePanel;
-    
+
+    // TODO move this
+    private JPanel resultsPanel;
+    private JLabel resultsLabel;
+
     private HashMap<String, String> data = null;
-    
+
     /**
      * The constructor for MainPanel.
      */
@@ -70,7 +80,7 @@ public class MainPanel extends JPanel {
         }
         createComponents();
     }
-    
+
     /**
      * Instantiates the possible actions.
      */
@@ -79,7 +89,7 @@ public class MainPanel extends JPanel {
         encodeAction = new EncodeAction(this);
         decodeAction = new DecodeAction(this);
     }
-    
+
     /**
      * Defines the persistence data that will be written in the xml. It contains
      * the image paths (also used as the last opened directories for each
@@ -94,7 +104,7 @@ public class MainPanel extends JPanel {
         data.put(ImageType.SOURCE.getType(), noPath);
         data.put(ImageType.HIDDEN.getType(), noPath);
     }
-    
+
     /**
      * Creates the main panel components.
      */
@@ -102,18 +112,20 @@ public class MainPanel extends JPanel {
         JPanel modePanel = new JPanel();
         modePanel.setLayout(new BoxLayout(modePanel, BoxLayout.PAGE_AXIS));
         JScrollPane scrollPane = new JScrollPane(modePanel,
-                        ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setName("Scroll Pane");
         scrollPane.setBackground(Color.BLACK);
         modePanel.add(createEncodePanel());
         modePanel.add(createDecodePanel());
+        // TODO move this
+        modePanel.add(createResultsPanel());
         add(scrollPane);
     }
-    
+
     /**
      * Creates an ImageIcon, or remains null if the path was invalid.
-     * 
+     *
      * @param path
      * @return
      */
@@ -126,63 +138,92 @@ public class MainPanel extends JPanel {
             return null;
         }
     }
-    
+
     /**
      * Creates the encode mode panel.
-     * 
+     *
      * @return
      */
     private JPanel createEncodePanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         setPanelTitleIconBorder(panel, "Encode mode",
-                        "/main/resources/icons/closed_lock.png");
+                "/main/resources/icons/closed_lock.png");
         JPanel encodePanel = new JPanel();
         encodePanel.setLayout(new BoxLayout(encodePanel, BoxLayout.LINE_AXIS));
         coverPanel = new GenericPanel(this, ImageType.COVER, "Select ",
-                        "Cover Image", selectImageAction, coverImage);
+                "Cover Image", selectImageAction, coverImage);
         secretPanel = new GenericPanel(this, ImageType.SECRET, "Select ",
-                        "Secret Image", selectImageAction, secretImage);
+                "Secret Image", selectImageAction, secretImage);
         stegoPanel = new GenericPanel(this, ImageType.STEGO, "Generate ",
-                        "Stego Image", encodeAction, stegoImage);
+                "Stego Image", encodeAction, stegoImage);
         encodePanel.add(coverPanel);
         encodePanel.add(secretPanel);
         encodePanel.add(stegoPanel);
         panel.add(encodePanel);
         return panel;
     }
-    
+
     /**
      * Creates the decode mode panel.
-     * 
+     *
      * @return
      */
     private JPanel createDecodePanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         setPanelTitleIconBorder(panel, "Decode mode",
-                        "/main/resources/icons/open_lock.png");
+                "/main/resources/icons/open_lock.png");
         JPanel decodePanel = new JPanel();
         decodePanel.setLayout(new BoxLayout(decodePanel, BoxLayout.LINE_AXIS));
         sourcePanel = new GenericPanel(this, ImageType.SOURCE, "Select ",
-                        "Source Image", selectImageAction, sourceImage);
+                "Source Image", selectImageAction, sourceImage);
         hiddenPanel = new GenericPanel(this, ImageType.HIDDEN, "Recover ",
-                        "Hidden Image", decodeAction, hiddenImage);
+                "Hidden Image", decodeAction, hiddenImage);
         decodePanel.add(sourcePanel);
         decodePanel.add(hiddenPanel);
         panel.add(decodePanel);
         return panel;
     }
-    
+
+    /**
+     * TODO move this
+     *
+     * @return
+     */
+    private JPanel createResultsPanel() {
+        resultsPanel = new JPanel();
+        
+        FormLayout formLayout = new FormLayout(
+                new ColumnSpec[] {
+                        ColumnSpec.decode("5px"),
+                        ColumnSpec.decode("25px:grow"),
+                        ColumnSpec.decode("5px"),
+                },
+                new RowSpec[] {
+                        RowSpec.decode("5px"),
+                        RowSpec.decode("25px:grow"),
+                        RowSpec.decode("5px"),
+                });
+        PanelBuilder panelBuilder = new PanelBuilder(formLayout, resultsPanel);
+        CellConstraints cellConstraints = new CellConstraints();
+
+        resultsLabel = new JLabel("no results yet");
+
+        panelBuilder.add(resultsLabel, cellConstraints.xy(2, 2, CellConstraints.CENTER, CellConstraints.CENTER));
+
+        return resultsPanel;
+    }
+
     /**
      * Creates a border with icon and title for a panel.
-     * 
+     *
      * @param panelTitle
      * @param iconPath
      * @param encodePanel2
      */
     private void setPanelTitleIconBorder(JPanel panel, String panelTitle,
-                    String iconPath) {
+            String iconPath) {
         ImageIcon icon = createImageIcon(iconPath);
         JLabel label = new JLabel(panelTitle, icon, JLabel.LEADING);
         label.setForeground(Color.WHITE);
@@ -194,90 +235,104 @@ public class MainPanel extends JPanel {
             borderOffset += 1;
         }
         gradientPanel.setBorder(BorderFactory.createEmptyBorder(borderOffset,
-                        4, borderOffset, 1));
+                4, borderOffset, 1));
         panel.add(gradientPanel, BorderLayout.NORTH);
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     }
-    
+
     /**
      * Getter for the current image panel.
-     * 
+     *
      * @return
      */
     public GenericImagePanel getCurrentImagePanel() {
         return currentImagePanel;
     }
-    
+
     /**
      * Setter for the current image panel.
-     * 
+     *
      * @param imagePanel
      */
     public void setCurrentImagePanel(GenericImagePanel imagePanel) {
         this.currentImagePanel = imagePanel;
     }
-    
+
     /**
      * Getter for the cover image panel.
-     * 
+     *
      * @return
      */
     public GenericPanel getCoverPanel() {
         return coverPanel;
     }
-    
+
     /**
      * Getter for the secret image panel.
-     * 
+     *
      * @return
      */
     public GenericPanel getSecretPanel() {
         return secretPanel;
     }
-    
+
     /**
      * Getter for the stego image panel.
-     * 
+     *
      * @return
      */
     public GenericPanel getStegoPanel() {
         return stegoPanel;
     }
-    
+
     /**
      * Getter for the source image panel.
-     * 
+     *
      * @return
      */
     public GenericPanel getSourcePanel() {
         return sourcePanel;
     }
-    
+
     /**
      * Getter for the hidden image panel.
-     * 
+     *
      * @return
      */
     public GenericPanel getHiddenPanel() {
         return hiddenPanel;
     }
-    
+
     /**
      * Getter for the persistence data.
-     * 
+     *
      * @return
      */
     public HashMap<String, String> getData() {
         return data;
     }
-    
+
     /**
      * Getter for the main frame of the application.
-     * 
+     *
      * @return
      */
     public JFrame getFrame() {
         return frame;
     }
     
+    /**
+     * @return the resultsLabel
+     */
+    public JLabel getResultsLabel() {
+        return resultsLabel;
+    }
+    
+    /**
+     * @param resultsLabel the resultsLabel to set
+     */
+    public void setResultsLabel(JLabel resultsLabel) {
+        this.resultsLabel = resultsLabel;
+    }
+
 }

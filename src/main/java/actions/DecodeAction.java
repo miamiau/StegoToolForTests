@@ -14,10 +14,11 @@ import org.apache.commons.logging.LogFactory;
 
 import main.java.gui.MainPanel;
 import main.java.lsb.LsbDecoder;
+import main.java.utils.Utils;
 
 /**
  * DecodeAction class.
- * 
+ *
  * @author Teodora C.
  */
 public class DecodeAction extends AbstractAction {
@@ -30,7 +31,7 @@ public class DecodeAction extends AbstractAction {
     
     /**
      * The constructor for DecodeAction.
-     * 
+     *
      * @param mainPanel
      */
     public DecodeAction(MainPanel mainPanel) {
@@ -38,17 +39,22 @@ public class DecodeAction extends AbstractAction {
         putValue(NAME, "Decode");
         putValue(SHORT_DESCRIPTION, "Decode");
         putValue(ACCELERATOR_KEY,
-                        KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+                KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
     }
     
     @Override
     public void actionPerformed(ActionEvent arg0) {
         executeLsbDecodingSteganography();
+        
+        // TODO move this
+        BufferedImage coverImage = mainPanel.getCoverPanel().getImage();
+        BufferedImage stegoImage = mainPanel.getStegoPanel().getImage();
+        mainPanel.getResultsLabel().setText(Utils.calculateSsim(coverImage, stegoImage));
     }
     
     /**
      * Decodes the secret image from the source image using LSB steganography.
-     * 
+     *
      * @throws IOException
      */
     public void executeLsbDecodingSteganography() {
@@ -61,8 +67,8 @@ public class DecodeAction extends AbstractAction {
             }
             
             String messageImagePath = sourceImagePath.replace("stegoimage",
-                            "hiddenimage");
-                            
+                    "hiddenimage");
+
             SaveImageAction saveImageAction = new SaveImageAction(mainPanel);
             saveImageAction.setSavedFilePath(messageImagePath);
             saveImageAction.actionPerformed(null);
@@ -71,17 +77,17 @@ public class DecodeAction extends AbstractAction {
             }
             
             UpdateDataAction updateDataAction = new UpdateDataAction(mainPanel,
-                            mainPanel.getHiddenPanel().getImagePanel(),
-                            messageImagePath);
+                    mainPanel.getHiddenPanel().getImagePanel(),
+                    messageImagePath);
             updateDataAction.actionPerformed(null);
             
             System.out.println("Executing LSB steganography decoding...");
             LsbDecoder lsbDecoder = new LsbDecoder(sourceImage,
-                            sourceImagePath, messageImagePath);
+                    sourceImagePath, messageImagePath);
             System.out.println("Finished LSB steganography decoding.");
             
             mainPanel.getHiddenPanel().getImagePanel()
-                            .setImage(lsbDecoder.getImage(), messageImagePath);
+                    .setImage(lsbDecoder.getImage(), messageImagePath);
         } catch (IOException e) {
             log.error("Could not execute the LSB decoding!", e);
         }
@@ -90,21 +96,21 @@ public class DecodeAction extends AbstractAction {
     /**
      * Verifies if the decoding needs are satisfied: all images are valid; all
      * paths are valid.
-     * 
+     *
      * @param sourceImage
      * @param sourceImagePath
      * @return
      */
     private boolean isDecodingPossible(BufferedImage sourceImage,
-                    String sourceImagePath) {
+            String sourceImagePath) {
         if (sourceImage == null) {
             JOptionPane.showMessageDialog(mainPanel,
-                            "No source image was selected!");
+                    "No source image was selected!");
             return false;
         }
         if (sourceImagePath == null) {
             JOptionPane.showMessageDialog(mainPanel,
-                            "Source image path is invalid!");
+                    "Source image path is invalid!");
             return false;
         }
         return true;

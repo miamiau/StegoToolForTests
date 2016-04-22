@@ -2,6 +2,7 @@ package main.java.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.AbstractAction;
@@ -10,6 +11,7 @@ import javax.swing.KeyStroke;
 
 import main.java.gui.GenericImagePanel;
 import main.java.gui.MainPanel;
+import main.java.utils.Utils;
 
 /**
  * SaveImageAction class.
@@ -40,6 +42,11 @@ public class SaveImageAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		saveImage();
+        
+        // TODO move this
+        BufferedImage coverImage = mainPanel.getCoverPanel().getImage();
+        BufferedImage stegoImage = mainPanel.getStegoPanel().getImage();
+        Utils.calculateSsim(coverImage, stegoImage);
 	}
 
 	/**
